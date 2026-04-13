@@ -36,6 +36,16 @@ def read_todos(db: Session = Depends(database.get_db)):
     '''
     return db.query(models.Todo).all()
 
+@app.get("/todos/{todo_id}", response_model=models.TodoResponse)
+def read_todo(todo_id: int, db: Session = Depends(database.get_db)):
+    '''
+    Retrieve a single todo item by ID
+    '''
+    todo = db.query(models.Todo).filter(models.Todo.id == todo_id).first()
+    if not todo:
+        raise HTTPException(status_code=404, detail="Todo not found")
+    return todo
+
 # Update
 @app.patch("/todos/{todo_id}", response_model=models.TodoResponse)
 def replace_todo(todo_id: int, todo: models.TodoCreate, db: Session = Depends(database.get_db)):
