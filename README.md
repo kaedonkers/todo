@@ -1,6 +1,6 @@
 # todo: A To-Do List API
 
-[DESCRIPTION OF API]
+This project is a Python package which exposes an API backend for a To-Do List application.
 
 ## Installation
 `pixi` is a commandline tool used to manage the package dependencies in this Python project. 
@@ -25,7 +25,8 @@ Once installed, you can launch the `todo` API from your commandline:
 pixi run todo --port 8282
 ```
 This will run the `todo` API at `http://localhost:8282/todo/`, where it will listen for requests.
-Here is a list of the available options to run `todo` with:
-```
 
+Here is a list of the available options to run `todo`:
+```
+...
 ```
