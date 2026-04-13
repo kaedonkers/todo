@@ -48,14 +48,14 @@ def read_todo(todo_id: int, db: Session = Depends(database.get_db)):
 
 # Update
 @app.patch("/todos/{todo_id}", response_model=models.TodoResponse)
-def replace_todo(todo_id: int, todo: models.TodoCreate, db: Session = Depends(database.get_db)):
+def update_todo(todo_id: int, todo: models.TodoUpdate, db: Session = Depends(database.get_db)):
     '''
-    Replace a whole todo item
+    Update some or all fields of a todo item
     '''
     db_todo = db.query(models.Todo).filter(models.Todo.id == todo_id).first()
     if not db_todo:
         raise HTTPException(status_code=404, detail="Todo not found")
-    for key, value in todo.dict().items():
+    for key, value in todo.dict(exclude_unset=True).items():
         setattr(db_todo, key, value)
     db.commit()
     db.refresh(db_todo)

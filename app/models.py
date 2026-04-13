@@ -35,3 +35,11 @@ class TodoResponse(TodoCreate):
     id: int
     class Config:
         from_attributes = True
+
+class TodoUpdate(pydantic.BaseModel):
+    '''
+    Model for partial update of todo item
+    '''
+    title: str | None = None
+    description: str | None = None
+    completed: bool | None = None
