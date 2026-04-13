@@ -1,19 +1,48 @@
+# ---
+# created: 13 Apr 2026
+# author: kaedonkers
+# modified: 13 Apr 2026
+# ---
+
 [project]
 authors = [{name = "Kevin Donkers", email = "k.donkers@exeter.ac.uk"}]
-dependencies = []
 name = "todo"
 requires-python = ">= 3.11"
 version = "0.1.0"
+dependencies = []
 
 [build-system]
 build-backend = "hatchling.build"
 requires = ["hatchling"]
 
+# ============================================================================
+# Pixi Integration
+# ============================================================================
+# This section allows pixi to manage dependencies and environments
+# See: https://pixi.sh/latest/python/pyproject_toml/
+
 [tool.pixi.workspace]
 channels = ["conda-forge", "apple"]
 platforms = ["osx-arm64", "osx-64", "linux-64", "win-64"]
 
+[tool.pixi.dependencies]
+python = ">=3.11,<4"
+sqlite = ">=3.53.0,<4"
+sqlalchemy = ">=2.0.49,<3"
+uvicorn = ">=0.44.0,<0.45"
+fastapi = ">=0.135.3,<0.136"
+pydantic = ">=2.13.0,<3"
+
 [tool.pixi.pypi-dependencies]
-todo = { path = ".", editable = true }
+
+[tool.pixi.environments]
+pytest = ["pytest"]
 
 [tool.pixi.tasks]
+start = "uvicorn app.main:app --reload"
+
+[tool.pixi.feature.pytest.dependencies]
+pytest = ">=9.0.3,<10"
+
+[tool.pixi.feature.pytest.tasks]
+tests = "pytest ./tests/"
