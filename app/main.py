@@ -19,6 +19,9 @@ app = FastAPI()
 # Create
 @app.post("/todos", response_model=models.TodoResponse)
 def create_todo(todo: models.TodoCreate, db: Session = Depends(database.get_db)):
+    '''
+    Create a new todo item
+    '''
     db_todo = models.Todo(**todo.dict())
     db.add(db_todo)
     db.commit()
@@ -28,4 +31,35 @@ def create_todo(todo: models.TodoCreate, db: Session = Depends(database.get_db))
 # Read
 @app.get("/todos", response_model=list[models.TodoResponse])
 def read_todos(db: Session = Depends(database.get_db)):
+    '''
+    Retrieve all todo items
+    '''
     return db.query(models.Todo).all()
+
+# Update
+@app.patch("/todos/{todo_id}", response_model=models.TodoResponse)
+def replace_todo(todo_id: int, todo: models.TodoCreate, db: Session = Depends(database.get_db)):
+    '''
+    Replace a whole todo item
+    '''
+    db_todo = db.query(models.Todo).filter(models.Todo.id == todo_id).first()
+    if not db_todo:
+        raise HTTPException(status_code=404, detail="Todo not found")
+    for key, value in todo.dict().items():
+        setattr(db_todo, key, value)
+    db.commit()
+    db.refresh(db_todo)
+    return db_todo
+
+# Delete
+@app.delete("/todos/{todo_id}")
+def delete_todo(todo_id: int, db: Session = Depends(database.get_db)):
+    '''
+    Delete a todo item
+    '''
+    todo = db.query(models.Todo).filter(models.Todo.id == todo_id).first()
+    if not todo:
+        raise HTTPException(status_code=404, detail="Todo not found")
+    db.delete(todo)
+    db.commit()
+    return {"message": "Todo deleted successfully"} 
