@@ -50,7 +50,7 @@ def read_todo(todo_id: int, db: Session = Depends(database.get_db)):
 @app.patch("/todos/{todo_id}", response_model=models.TodoResponse)
 def update_todo(todo_id: int, todo: models.TodoUpdate, db: Session = Depends(database.get_db)):
     '''
-    Update some or all fields of a todo item
+    Update fields of a single todo item by ID
     '''
     db_todo = db.query(models.Todo).filter(models.Todo.id == todo_id).first()
     if not db_todo:
@@ -65,7 +65,7 @@ def update_todo(todo_id: int, todo: models.TodoUpdate, db: Session = Depends(dat
 @app.delete("/todos/{todo_id}")
 def delete_todo(todo_id: int, db: Session = Depends(database.get_db)):
     '''
-    Delete a todo item
+    Delete a todo item by ID
     '''
     todo = db.query(models.Todo).filter(models.Todo.id == todo_id).first()
     if not todo:
@@ -73,3 +73,13 @@ def delete_todo(todo_id: int, db: Session = Depends(database.get_db)):
     db.delete(todo)
     db.commit()
     return {"message": "Todo deleted successfully"} 
+
+@app.delete("/todos/")
+def delete_all_todos(db: Session = Depends(database.get_db)):
+    '''
+    Delete all todo items
+    '''
+    db.query(models.Todo).delete(synchronize_session=False)
+    db.commit()
+    return {"message": "All todos deleted successfully"} 
+
