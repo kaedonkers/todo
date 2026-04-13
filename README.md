@@ -4,6 +4,7 @@ This project is a Python package which exposes an API backend for a To-Do List a
 
 ## Installation
 `pixi` is a commandline tool used to manage the package dependencies in this Python project. 
+It installs packages from both `conda` channels and PyPI.
 If it is not already available on your system, please follow the instructions at https://pixi.prefix.dev/latest/installation.
 
 The easiest way to install `pixi` on Linux/MacOS is:
@@ -22,9 +23,10 @@ pixi run install
 ## Quickstart
 Once installed, you can launch the `todo` API from your commandline:
 ```
-pixi run todo --port 8282
+pixi run start --port 8282
 ```
-This will run the `todo` API at `http://localhost:8282/todo/`, where it will listen for requests.
+This will run the API at `http://localhost:8282/`, where it will listen for requests.
+`http://localhost:8282/docs` gives you a dashboard for monitoring and interactive with the API.
 
 Here is a list of the available options to run `todo`:
 ```
