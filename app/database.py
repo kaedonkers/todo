@@ -6,6 +6,7 @@
 # Database setup and session management
 
 import sqlalchemy as sqla
+import sqlalchemy.orm
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///./todo.db"
 
