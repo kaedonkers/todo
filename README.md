@@ -26,6 +26,7 @@ Once installed, you can launch the `todo` API from your commandline:
 pixi run start --port 8282
 ```
 This will run the API at `http://localhost:8282/`, where it will listen for requests.
+`http://localhost:8282/docs` gives you a dashboard for monitoring and interactive with the API.
 
 Here is a list of the available options to run `todo`:
 ```
