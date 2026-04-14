@@ -39,7 +39,7 @@ pydantic = ">=2.13.0,<3"
 pytest = ["pytest"]
 
 [tool.pixi.tasks]
-start = "uvicorn app.main:app --reload"
+start = "python start.py"
 
 [tool.pixi.feature.pytest.dependencies]
 pytest = ">=9.0.3,<10"
