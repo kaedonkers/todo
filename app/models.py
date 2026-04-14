@@ -5,6 +5,8 @@
 # ---
 # Define models for data and actions on the database
 
+from datetime import datetime
+
 import pydantic
 import sqlalchemy as sqla
 
@@ -19,6 +21,11 @@ class Todo(database.BaseDB):
     title = sqla.Column(sqla.String)
     description = sqla.Column(sqla.String, nullable=True)
     completed = sqla.Column(sqla.Boolean, default=False)
+    created_at = sqla.Column(
+        sqla.DateTime, 
+        default=datetime.now, 
+        server_default=sqla.func.now(),
+        )
 
 class TodoCreate(pydantic.BaseModel):
     '''
@@ -33,6 +40,7 @@ class TodoResponse(TodoCreate):
     Model for returning a todo item
     '''
     id: int
+    created_at: datetime
     class ConfigDict:
         from_attributes: True
 

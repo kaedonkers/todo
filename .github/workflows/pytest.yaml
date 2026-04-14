@@ -6,7 +6,7 @@
 name: pytest
 on: [pull_request]
 jobs:
-  test-ubuntu-latest:
+  pytest-ubuntu-latest:
     runs-on: ubuntu-latest
     strategy:
       matrix:
