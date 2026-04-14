@@ -1,6 +1,4 @@
 # Project
-.env
-pixi.lock
 todo.db
 
 # Python

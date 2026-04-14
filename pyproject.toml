@@ -45,4 +45,4 @@ start = "uvicorn app.main:app --reload"
 pytest = ">=9.0.3,<10"
 
 [tool.pixi.feature.pytest.tasks]
-tests = "pytest ./tests/"
+tests = "pytest tests/"
