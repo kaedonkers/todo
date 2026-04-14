@@ -12,53 +12,51 @@ import sqlalchemy.orm
 
 from app import database, models
 
-# NB: Could use in-memory database for speed, but overkill for this demo project
-
-def test_database_connection():
-    with database.engine.connect() as conn:
+def test_database_connection(test_engine):
+    # Connect to test database
+    with test_engine.connect() as conn:
+        # Execute simple query
         result = conn.execute(sqla.text("SELECT 1"))
         assert result.scalar() == 1
 
-def test_tables_can_be_created():
+def test_tables_can_be_created(test_engine):
     # Create tables
-    database.BaseDB.metadata.create_all(bind=database.engine)
+    database.BaseDB.metadata.create_all(bind=test_engine)
     # Verify `todos` table exists
-    inspector = sqla.inspect(database.engine)
-    assert "todos" in inspector.get_table_names()
-    # Cleanup
-    database.BaseDB.metadata.drop_all(bind=database.engine)
+    assert "todos" in sqla.inspect(test_engine).get_table_names()
 
-def test_db_disk_persistence():
-    # Create a temporary filepath
-    with tempfile.NamedTemporaryFile(suffix=".db", delete=False) as tmp:
-        db_path = tmp.name
+def test_db_disk_persistence(test_session, test_db_path):
+    # Add record to test database fixture
+    todo = models.Todo(
+        title="test_db_disk_persistence", 
+        description="Testing disk persistence of the database.",
+        )
+    test_session.add(todo)
+    # Get the record ID to verify persistence later
+    test_session.flush()
+    todo_id = todo.id
+    assert todo_id is not None
+    # Commit to test database
+    test_session.commit()
+    # Start new session to verify record has persisted in test database
     try:
-        # Create DB at the temp filepath
-        engine = sqla.create_engine(f"sqlite:///{db_path}")
-        database.BaseDB.metadata.create_all(bind=engine)
-        # Verify file exists after creation
-        assert os.path.exists(db_path)
-        # Write data
-        Session = sqla.orm.sessionmaker(bind=engine)
-        db = Session()
-        db.add(models.Todo(
-            title="test_db_disk_persistence", 
-            description="Testing disk persistence of the database.",
-            ))
-        db.commit()
-        db.close()
-        # Verify file exists after close
-        assert os.path.exists(db_path)
-        # Re-open and verify data has persisted
-        engine2 = sqla.create_engine(f"sqlite:///{db_path}")
+        assert os.path.exists(test_db_path)
+        engine2 = sqla.create_engine(f"sqlite:///{test_db_path}")
         Session2 = sqla.orm.sessionmaker(bind=engine2)
-        db2 = Session2()
-        count = db2.query(models.Todo).count()
-        assert count == 1
-        title = db2.query(models.Todo).first().title
-        assert title == "test_db_disk_persistence"
-        db2.close()
-    # Cleanup
+        db_session2 = Session2()
+        try:
+            persisted = db_session2.get(models.Todo, todo_id)
+            assert persisted is not None
+            assert persisted.id == todo_id
+            assert persisted.title == "test_db_disk_persistence"
+            assert persisted.description == "Testing disk persistence of the database."
+        finally:
+            # Remove test record
+            db_session2.delete(persisted)
+            db_session2.commit()
+            # Close second session
+            db_session2.close()
     finally: 
-        # Just in case, ensure the file is removed after the test
-        if os.path.exists(db_path): os.remove(db_path)
+        # Dispose of second engine
+        engine2.dispose()
+
