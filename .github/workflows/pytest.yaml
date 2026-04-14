@@ -3,7 +3,7 @@ name: pytest
 on: [push, pull_request]
 
 jobs:
-  test-macos-latest:
+  test-linux-latest:
     runs-on: linux-latest
     strategy:
       matrix:
