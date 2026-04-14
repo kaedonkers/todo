@@ -3,17 +3,15 @@
 # author: kaedonkers
 # modified: 14 Apr 2026
 # ---
-# Tests for models
+# Test API endpoints
 
-import pytest
 from fastapi.testclient import TestClient
 
-from app import main, models, database
+from app import main, database
 
 # NB: Could setup in-memory database and override get_db for more isolated testing, 
 # e.g. SQLALCHEMY_DATABASE_URL = "sqlite:///:memory:"
 # but for simplicity I'll just test against the actual database 
-# Ideally, one would use a separate test database for test isolation and prevent side effects
 
 # Tests
 def test_server_is_up():

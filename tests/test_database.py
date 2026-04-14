@@ -3,11 +3,10 @@
 # author: kaedonkers
 # modified: 14 Apr 2026
 # ---
-# Tests database connectivity and disk persistence
+# Test database
 
 import os
 import tempfile
-import pytest
 import sqlalchemy as sqla
 import sqlalchemy.orm
 
