@@ -15,7 +15,11 @@ from . import database, models
 database.BaseDB.metadata.create_all(bind=database.engine)
 
 # Initialize API
-app = fapi.FastAPI()
+app = fapi.FastAPI(
+    title="todo API",
+    description="A simple API for managing todo items, built with FastAPI and SQLite",
+    version="1.0.0",    
+)
 
 # Create
 @app.post("/todos", response_model=models.TodoResponse)
