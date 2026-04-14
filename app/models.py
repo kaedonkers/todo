@@ -1,7 +1,7 @@
 # ---
 # created: 13 Apr 2026
 # author: kaedonkers
-# modified: 13 Apr 2026
+# modified: 14 Apr 2026
 # ---
 # Define models for data and actions on the database
 
@@ -33,8 +33,8 @@ class TodoResponse(TodoCreate):
     Model for returning a todo item
     '''
     id: int
-    class Config:
-        from_attributes = True
+    class ConfigDict:
+        from_attributes: True
 
 class TodoUpdate(pydantic.BaseModel):
     '''

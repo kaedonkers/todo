@@ -1,7 +1,7 @@
 # ---
 # created: 13 Apr 2026
 # author: kaedonkers
-# modified: 13 Apr 2026
+# modified: 14 Apr 2026
 # ---
 # Defining endpoints for API
 
@@ -19,11 +19,11 @@ app = fapi.FastAPI()
 
 # Create
 @app.post("/todos", response_model=models.TodoResponse)
-def create_todo(todo: models.TodoCreate, db: sqla.orm.Session = fapi.Depends(database.get_db)):
+def create_single_todo(todo: models.TodoCreate, db: sqla.orm.Session = fapi.Depends(database.get_db)):
     '''
     Create a new todo item
     '''
-    db_todo = models.Todo(**todo.dict())
+    db_todo = models.Todo(**todo.model_dump())
     db.add(db_todo)
     db.commit()
     db.refresh(db_todo)
@@ -31,14 +31,14 @@ def create_todo(todo: models.TodoCreate, db: sqla.orm.Session = fapi.Depends(dat
 
 # Read
 @app.get("/todos", response_model=list[models.TodoResponse])
-def read_todos(db: sqla.orm.Session = fapi.Depends(database.get_db)):
+def read_all_todos(db: sqla.orm.Session = fapi.Depends(database.get_db)):
     '''
     Retrieve all todo items
     '''
     return db.query(models.Todo).all()
 
 @app.get("/todos/{todo_id}", response_model=models.TodoResponse)
-def read_todo(todo_id: int, db: sqla.orm.Session = fapi.Depends(database.get_db)):
+def read_single_todo(todo_id: int, db: sqla.orm.Session = fapi.Depends(database.get_db)):
     '''
     Retrieve a single todo item by ID
     '''
@@ -49,14 +49,14 @@ def read_todo(todo_id: int, db: sqla.orm.Session = fapi.Depends(database.get_db)
 
 # Update
 @app.patch("/todos/{todo_id}", response_model=models.TodoResponse)
-def update_todo(todo_id: int, todo: models.TodoUpdate, db: sqla.orm.Session = fapi.Depends(database.get_db)):
+def update_single_todo(todo_id: int, todo: models.TodoUpdate, db: sqla.orm.Session = fapi.Depends(database.get_db)):
     '''
     Update fields of a single todo item by ID
     '''
     db_todo = db.query(models.Todo).filter(models.Todo.id == todo_id).first()
     if not db_todo:
         raise fapi.HTTPException(status_code=404, detail="Todo not found")
-    for key, value in todo.dict(exclude_unset=True).items():
+    for key, value in todo.model_dump(exclude_unset=True).items():
         setattr(db_todo, key, value)
     db.commit()
     db.refresh(db_todo)
@@ -64,7 +64,7 @@ def update_todo(todo_id: int, todo: models.TodoUpdate, db: sqla.orm.Session = fa
 
 # Delete
 @app.delete("/todos/{todo_id}")
-def delete_todo(todo_id: int, db: sqla.orm.Session = fapi.Depends(database.get_db)):
+def delete_single_todo(todo_id: int, db: sqla.orm.Session = fapi.Depends(database.get_db)):
     '''
     Delete a todo item by ID
     '''
@@ -84,3 +84,4 @@ def delete_all_todos(db: sqla.orm.Session = fapi.Depends(database.get_db)):
     db.commit()
     return {"message": "All todos deleted successfully"} 
 
+# Additional endpoints for filtering and sorting using query parameters could be added
