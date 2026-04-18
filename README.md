@@ -29,7 +29,7 @@ The `--gui` option will launch an interactive user interface in a browser at `ht
 ### API Documentation
 Once a server is up and running, here are the avaibale endpoints:
 | Method | Path | Action | Success | Error |
-|---|---|---|---|---|
+|:--|:--|:--|:--|:--|
 | POST | /todos | Create a todo | 200 + created todo | 422 validation error |
 | GET | /todos | List all todos | 200 + array of todos | - |
 | GET | /todos/{todo_id} | Get a todo by id | 200 + todo | 404 Todo not found |
