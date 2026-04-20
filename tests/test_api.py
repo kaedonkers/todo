@@ -7,6 +7,7 @@
 
 from app import main, database
 
+# TODO: Check content of todo items that are returned
 # Tests
 def test_server_is_live(test_client):
     response = test_client.get(url="/todos")
