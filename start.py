@@ -3,7 +3,7 @@
 # author: kaedonkers
 # modified: 14 Apr 2026
 # ---
-# Start API server with optional GUI
+# Start API server with optional GUI or documentation
 
 import sys
 import time
