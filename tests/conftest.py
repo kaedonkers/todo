@@ -78,8 +78,8 @@ def test_client(test_session):
             pass
     main.app.dependency_overrides[database.get_db] = _override_get_db
     # Yield test client
-    with TestClient(main.app) as c:
-        yield c
+    with TestClient(main.app) as client:
+        yield client
     main.app.dependency_overrides.clear()
 
 # Probably not necessary, but here if needed
@@ -88,5 +88,5 @@ def real_client():
     '''
     Provides a TestClient that uses the actual app database for testing
     '''
-    with TestClient(main.app) as c:
-        yield c
+    with TestClient(main.app) as client:
+        yield client
