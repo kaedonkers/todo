@@ -8,7 +8,7 @@
 from app import main, database
 
 # Tests
-def test_server_is_up(test_client):
+def test_server_is_live(test_client):
     response = test_client.get(url="/todos")
     assert response.status_code == 200
 
