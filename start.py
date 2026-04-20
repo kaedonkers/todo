@@ -25,12 +25,12 @@ def start_server(host="127.0.0.1", port=8000, gui=True, docs=True, server_wait_s
     if gui or docs:
         time.sleep(server_wait_seconds)
         print(f"Waiting {server_wait_seconds} seconds for server to start...")
-    if gui:
-        print("Opening Swagger UI...")
-        webbrowser.open(f"http://{host}:{port}/docs")
-    if docs:
-        print("Opening ReDoc UI...")
-        webbrowser.open(f"http://{host}:{port}/redoc")
+        if gui:
+            print("Opening Swagger UI...")
+            webbrowser.open(f"http://{host}:{port}/docs")
+        if docs:
+            print("Opening ReDoc UI...")
+            webbrowser.open(f"http://{host}:{port}/redoc")
     # Keep the script running so the server stays up
     try:
         proc.wait()
